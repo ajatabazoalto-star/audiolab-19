@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight 18 Audio Lab (ICAO Level 3) — Present Perfect &amp; Operational Vocabulary</title>
+<style>
+  :root{
+    --navy:#0b1f3a; --navy2:#122a4d; --sky:#1ea7e8; --amber:#f5a623;
+    --green:#28c76f; --red:#ea5455; --purple:#8e6ef2;
+    --ink:#122036; --paper:#f4f8fc; --card:#ffffff; --muted:#6b7c93;
+    --radius:16px; --shadow:0 8px 24px rgba(11,31,58,0.12);
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+  body{min-height:100vh;}
+  header.topbar{
+    background:linear-gradient(135deg,var(--navy) 0%, var(--navy2) 100%);
+    color:#fff;padding:16px 18px 12px;position:sticky;top:0;z-index:50;
+    box-shadow:0 4px 18px rgba(0,0,0,.25);
+  }
+  .topbar-inner{max-width:1150px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--sky);color:#fff;font-size:11px;font-weight:700;
+    letter-spacing:1px;padding:5px 12px;border-radius:20px;text-transform:uppercase;margin-bottom:8px;
+  }
+  header.topbar h1{margin:0 0 4px;font-size:clamp(18px,3.6vw,26px);}
+  header.topbar p{margin:0 0 12px;color:#b9c8de;font-size:13px;}
+  nav.phasenav{display:flex;gap:6px;flex-wrap:wrap;}
+  nav.phasenav button{
+    flex:1 1 90px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+    color:#dce6f5;padding:8px 6px;border-radius:10px;font-size:10.5px;font-weight:600;cursor:pointer;
+    transition:.2s;text-align:center;
+  }
+  nav.phasenav button .num{display:block;font-size:9px;font-weight:800;color:var(--amber);letter-spacing:1px;margin-bottom:2px;}
+  nav.phasenav button.active{background:var(--sky);border-color:var(--sky);color:#fff;}
+  nav.phasenav button:hover:not(.active){background:rgba(255,255,255,0.16);}
+  .progress-outer{height:6px;background:rgba(255,255,255,0.15);border-radius:6px;margin-top:10px;overflow:hidden;}
+  .progress-inner{height:100%;width:0%;background:linear-gradient(90deg,var(--sky),var(--amber));transition:width .4s ease;}
+  main{max-width:1150px;margin:0 auto;padding:26px 18px 70px;}
+  .phase{display:none;animation:fadeIn .4s ease;}
+  .phase.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .phase-title{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .phase-title .bar{width:5px;height:26px;background:var(--sky);border-radius:3px;}
+  .phase-title h2{margin:0;font-size:clamp(19px,3.2vw,25px);}
+  .phase-sub{color:var(--muted);margin:0 0 22px;font-size:14.5px;max-width:760px;}
+  .lab-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 22px;margin-bottom:20px;}
+  .audio-player-box{
+    background:#eef4fb;border-left:5px solid var(--sky);padding:16px 20px;border-radius:10px;
+    display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;
+  }
+  .audio-btn-group{display:flex;gap:8px;flex-shrink:0;}
+  .audio-btn{
+    width:44px;height:44px;border-radius:50%;color:#fff;border:none;
+    font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:.2s;box-shadow:0 4px 12px rgba(11,31,58,0.15);
+  }
+  .audio-btn:hover{transform:scale(1.08);}
+  .audio-btn.play-btn{background:var(--sky);}
+  .audio-btn.play-btn:hover{background:var(--navy);}
+  .audio-btn.pause-btn{background:var(--amber);}
+  .audio-btn.pause-btn:hover{background:var(--red);}
+  .audio-btn.small{width:36px;height:36px;font-size:14px;}
+  .audio-info{flex:1;min-width:150px;}
+  .audio-info h4{margin:0 0 4px;font-size:15px;color:var(--navy);}
+  .audio-info p{margin:0;font-size:12.5px;color:var(--muted);}
+  .question-block{margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid #eef4fb;}
+  .question-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .q-text{font-size:15.5px;font-weight:700;color:var(--ink);margin-bottom:12px;}
+  .opt-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+  .opt-btn{
+    background:#f7fafd;border:2px solid #e2ebf3;border-radius:12px;padding:12px 16px;
+    font-size:14px;font-weight:600;color:var(--ink);text-align:left;cursor:pointer;transition:.15s;
+    display:flex;align-items:center;gap:10px;
+  }
+  .opt-btn:hover{border-color:var(--sky);background:#fff;}
+  .opt-btn.correct{background:#e8f9ee;border-color:var(--green);color:#1c8a4d;}
+  .opt-btn.wrong{background:#fdecec;border-color:var(--red);color:#c53030;}
+  .opt-btn:disabled{opacity:0.6;cursor:not-allowed;}
+  .complete-item{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #eef4fb;}
+  .complete-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .complete-sentence{font-size:17px;font-weight:700;color:var(--navy);margin:12px 0;line-height:2.2;}
+  .blank-input{
+    display:inline-block;min-width:150px;padding:6px 10px;border:2px dashed var(--sky);
+    border-radius:6px;font-size:15px;font-weight:700;color:var(--ink);
+    background:#fff;outline:none;text-align:center;margin:0 4px;
+  }
+  .blank-input:focus{border-color:var(--navy);border-style:solid;}
+  .blank-input.correct{border-color:var(--green);border-style:solid;background:#e8f9ee;color:#1c8a4d;}
+  .blank-input.wrong{border-color:var(--red);border-style:solid;background:#fdecec;color:#c53030;}
+  .blank-input:disabled{opacity:0.75;}
+  .type-badge{
+    display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;
+    margin-left:6px;letter-spacing:.5px;text-transform:uppercase;
+  }
+  .type-badge.pilot{background:#e8f0fe;color:#1a73e8;}
+  .type-badge.atco{background:#fce8e6;color:#ea5455;}
+  .type-badge.ops{background:#e6f4ea;color:#28c76f;}
+  .complete-check-btn{
+    background:var(--sky);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:700;
+    cursor:pointer;font-size:13.5px;transition:.2s;margin-top:10px;
+  }
+  .complete-check-btn:hover{background:var(--navy);}
+  .complete-check-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .complete-feedback{font-size:13px;font-weight:700;margin-top:8px;min-height:18px;}
+  .complete-feedback.ok{color:var(--green);}
+  .complete-feedback.no{color:var(--red);}
+  .open-answer-input{
+    width:100%;min-height:80px;padding:12px;border-radius:10px;border:2px solid #e2ebf3;
+    font-size:14px;font-family:inherit;font-weight:600;color:var(--ink);outline:none;
+    resize:vertical;margin-top:8px;
+  }
+  .open-answer-input:focus{border-color:var(--sky);}
+  .open-answer-input:disabled{opacity:0.6;background:#f7fafd;}
+  .open-answer-input.correct{border-color:var(--green);background:#e8f9ee;}
+  .open-answer-input.wrong{border-color:var(--red);background:#fdecec;}
+  .open-check-btn{
+    background:var(--purple);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:700;
+    cursor:pointer;font-size:13.5px;transition:.2s;margin-top:10px;
+  }
+  .open-check-btn:hover{background:var(--navy);}
+  .open-check-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .attempt-tag{
+    display:inline-block;font-size:11px;font-weight:800;color:var(--amber);background:#fff2da;
+    padding:3px 9px;border-radius:20px;margin-left:8px;letter-spacing:.5px;
+  }
+  .attempt-tag.maxed{color:var(--red);background:#fdecec;font-weight:900;}
+  .retry-note{
+    background:#fff6e6;border-left:5px solid var(--amber);padding:12px 16px;border-radius:10px;
+    font-size:13px;color:#7a5300;margin-bottom:20px;
+  }
+  .final-wrap{max-width:750px;margin:0 auto;text-align:center;}
+  .final-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:40px 26px;}
+  .medal{font-size:80px;margin-bottom:6px;}
+  .final-card h3{font-size:26px;color:var(--navy);margin:0 0 4px;}
+  .final-card .medal-label{font-weight:800;color:var(--amber);text-transform:uppercase;letter-spacing:1px;font-size:13px;margin-bottom:18px;}
+  .final-score-big{font-size:52px;font-weight:900;color:var(--sky);margin-bottom:4px;}
+  .final-score-sub{color:var(--muted);font-size:13px;margin-bottom:26px;}
+  .final-breakdown{display:flex;flex-direction:column;gap:12px;text-align:left;margin-bottom:26px;}
+  .fb-row{display:flex;align-items:center;gap:12px;}
+  .fb-row .fb-label{width:210px;font-size:13px;font-weight:700;color:var(--ink);flex-shrink:0;}
+  .fb-row .fb-bar-outer{flex:1;height:10px;background:#e2ebf3;border-radius:6px;overflow:hidden;}
+  .fb-row .fb-bar-inner{height:100%;background:linear-gradient(90deg,var(--sky),var(--green));border-radius:6px;}
+  .fb-row .fb-val{width:60px;text-align:right;font-size:12.5px;font-weight:800;color:var(--muted);}
+  .restart-btn{background:var(--amber);border:none;color:#3a2600;padding:13px 26px;border-radius:10px;font-weight:800;cursor:pointer;font-size:14.5px;}
+  .restart-btn:hover{background:var(--sky);color:#fff;}
+  .result-box{margin-top:20px;padding:20px;border-radius:12px;font-weight:700;font-size:18px;}
+  .result-box.pass{background:#e8f9ee;color:var(--green);border:2px solid var(--green);}
+  .result-box.fail{background:#fdecec;color:var(--red);border:2px solid var(--red);}
+  footer.bottom{text-align:center;color:var(--muted);font-size:12px;padding:20px;}
+  footer.bottom span{color:var(--sky);font-weight:700;}
+  @media(max-width:640px){
+    nav.phasenav{gap:5px;}
+    nav.phasenav button{font-size:10px;padding:7px 4px;}
+    .fb-row .fb-label{width:130px;font-size:11px;}
+    .audio-player-box{gap:10px;}
+    .audio-btn-group{gap:5px;}
+    .audio-btn{width:38px;height:38px;font-size:15px;}
+    .blank-input{min-width:100px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="badge">Picken-Glish Aviation · Flight 18 Audio Lab</span>
+    <h1>Present Perfect, Radio Communications, Takeoff &amp; Climb</h1>
+    <p>ICAO Level 3 Operational Listening Lab · Natural Speed (0.92x) · Pilots, ATCO &amp; Flight Phases</p>
+    <nav class="phasenav" id="phaseNav">
+      <button class="phase-btn active" data-phase="1"><span class="num">SECTION 1</span>Complete Word</button>
+      <button class="phase-btn" data-phase="2"><span class="num">SECTION 2</span>Medium Listening</button>
+      <button class="phase-btn" data-phase="3"><span class="num">SECTION 3</span>Long Briefing</button>
+      <button class="phase-btn" data-phase="4"><span class="num">SECTION 4</span>Listening Drill</button>
+      <button class="phase-btn" data-phase="5"><span class="num">SECTION 5</span>Perfect Tenses</button>
+      <button class="phase-btn" data-phase="6"><span class="num">SECTION 6</span>Technical Passages</button>
+      <button class="phase-btn" data-phase="7"><span class="num">SECTION 7</span>Cockpit Dialogues</button>
+      <button class="phase-btn" data-phase="8"><span class="num">SECTION 8</span>Final Review</button>
+    </nav>
+    <div class="progress-outer"><div class="progress-inner" id="topProgress"></div></div>
+  </div>
+</header>
+
+<main>
+
+  <section class="phase active" id="phase1">
+    <div class="phase-title"><span class="bar"></span><h2>Section 1: Operational Vocabulary — Complete the Word</h2></div>
+    <p class="phase-sub">Listen to ICAO Level 3 aviation transmissions and fill in the missing operational term (Pilot, ATCO, Takeoff &amp; Climb). 3 attempts per sentence.</p>
+    <div class="retry-note">💡 Escucha el audio a velocidad natural (0.92x) y escribe la palabra técnica faltante de la unidad.</div>
+    <div class="lab-card" id="completeArea"></div>
+  </section>
+
+  <section class="phase" id="phase2">
+    <div class="phase-title"><span class="bar"></span><h2>Section 2: Medium Listening — Abnormal Reports &amp; ATC Clearance</h2></div>
+    <p class="phase-sub">Listen to realistic Pilot-ATCO operational briefings and answer comprehension questions. 3 attempts per question.</p>
+    <div id="listenMediumArea"></div>
+  </section>
+
+  <section class="phase" id="phase3">
+    <div class="phase-title"><span class="bar"></span><h2>Section 3: Long Listening — Takeoff Speeds, Climb &amp; Radio Procedures</h2></div>
+    <p class="phase-sub">Listen to comprehensive flight operations reports covering NTOFP, climb methods, and radio discipline. 3 attempts per question.</p>
+    <div id="listenLongArea"></div>
+  </section>
+
+  <section class="phase" id="phase4">
+    <div class="phase-title"><span class="bar"></span><h2>Section 4: Listening Drill — Identify the Operational Statement</h2></div>
+    <p class="phase-sub">Listen carefully to the radio transmission or operational report and select the exact matching statement. 3 attempts per question.</p>
+    <div class="retry-note">🎧 Escucha atentamente la transmisión de cabina o torre y selecciona la afirmación exacta.</div>
+    <div class="lab-card" id="drillArea"></div>
+  </section>
+
+  <section class="phase" id="phase5">
+    <div class="phase-title"><span class="bar"></span><h2>Section 5: Present Perfect vs. Present Perfect Progressive on Frequency</h2></div>
+    <p class="phase-sub">Listen to live transmissions distinguishing completed events with present impact (have/has + past participle) from ongoing durations (have/has been + -ing).</p>
+    <div class="retry-note">🎧 Analiza reportes en tiempo real diferenciando eventos completados de acciones en progreso continuo.</div>
+    <div class="lab-card" id="perfectArea"></div>
+  </section>
+
+  <section class="phase" id="phase6">
+    <div class="phase-title"><span class="bar"></span><h2>Section 6: Technical Passages — Open Answers</h2></div>
+    <p class="phase-sub">Listen to operational excerpts on Takeoff Performance and Standardized Radio Communications, then write complete answers.</p>
+    <div class="retry-note">💡 Responde en oraciones completas demostrando comprensión de los procedimientos de despegue, ascenso y comunicaciones.</div>
+    <div class="lab-card" id="storyArea"></div>
+  </section>
+
+  <section class="phase" id="phase7">
+    <div class="phase-title"><span class="bar"></span><h2>Section 7: Cockpit &amp; Tower Dialogues — Operational Roleplay</h2></div>
+    <p class="phase-sub">Listen to realistic Pilot-ATCO exchanges involving emergencies, holding patterns, takeoff speeds, and readbacks.</p>
+    <div class="retry-note">🎧 Evalúa las decisiones operativas y la fraseología utilizada durante los diálogos reproducidos.</div>
+    <div class="lab-card" id="roleplayArea"></div>
+  </section>
+
+  <section class="phase" id="phase8">
+    <div class="phase-title"><span class="bar"></span><h2>Final Review &amp; Flight 18 Evaluation Summary</h2></div>
+    <p class="phase-sub">Comprehensive evaluation of your Flight 18 Audio Lab performance. Minimum 80% required to pass.</p>
+    <div class="final-wrap" id="finalArea"></div>
+  </section>
+
+</main>
+
+<footer class="bottom">✈️ Picken-Glish Aviation · <span>Flight 18 Audio Lab · Present Perfect &amp; Operational English</span></footer>
+
+<script>
+/* ============================================================
+   AUDIO SCRIPTS — FLIGHT 18 CONTENT (ICAO LEVEL 3, RADIO, TAKEOFF & CLIMB)
+   ============================================================ */
+const AUDIOS = {
+  // Section 1 — Complete the Word (15 sentences)
+  c1:  "Approach, we are executing a go-around due to windshear on final.",
+  c2:  "We have experienced a bird strike on the left engine during climb.",
+  c3:  "Due to a severe fuel leak, we must divert to the alternate airport.",
+  c4:  "The crew has reported a flap malfunction prior to approach.",
+  c5:  "Severe icing conditions have caused ice buildup on the wings and sensors.",
+  c6:  "We have suffered a sudden depressurization and are descending immediately.",
+  c7:  "Tower, our nose landing gear appears jammed after extension.",
+  c8:  "We have lost engine two due to an unexpected flameout.",
+  c9:  "Approach, we have been holding in a holding pattern over VOR Bravo for forty minutes.",
+  c10: "Tower has stopped all departures because of a runway incursion on runway two seven.",
+  c11: "Maintain extra spacing behind the heavy aircraft to avoid wake turbulence.",
+  c12: "Radar is providing vectoring via compass headings to establish minimum separation.",
+  c13: "Set squawk four two one five and hold short of runway zero niner.",
+  c14: "The pilot has just switched on the transceiver and adjusted the squelch control.",
+  c15: "The aircraft has reached V1 decision speed and rotated smoothly at Vr.",
+
+  // Section 2 — Medium Listening
+  s2a: "Mayday, Mayday, Mayday, Approach, Speedbird four one two. We have experienced a bird strike on engine two shortly after rotation, resulting in an immediate flameout. Additionally, we have detected a minor fuel leak from the right wing tank. We have declared an emergency and request radar vectoring to divert directly to the nearest alternate airport.",
+
+  s2b: "Speedbird four one two, Approach, roger your Mayday. Squawk seven seven zero zero. Runway two seven has closed due to a runway incursion, and crews have been clearing debris for the past fifteen minutes. We are vectoring you for runway zero niner. Maintain minimum separation from preceding traffic and report established on final.",
+
+  // Section 3 — Long Listening (Briefings on Takeoff/Climb & Radio Communications)
+  s3a: "Takeoff and climb performance briefing. Before departure, pilots must study the Net Takeoff Flight Path, or NTOFP, in the flight manual. During the ground roll, once the aircraft reaches V1, takeoff is mandatory. At Vr, the pilot rotates the aircraft, and in Segment 1 the crew completes the landing gear retraction before exceeding maximum operating speed. If an engine fails, the aircraft climbs at V2 safety speed. In busy terminal areas, crews often follow a tunnel departure and respect every climb restriction.",
+
+  s3b: "Climb optimization and standardized radiotelephony procedures. Pilots select a best rate of climb to gain altitude in the shortest time, a high-speed climb to cover more distance, or a long-range climb for maximum fuel efficiency while monitoring Vb speed and Mach number. Throughout every phase, pilots and air traffic controllers rely on clear radio communication. Using a headset and transceiver, pilots must read back every official clearance accurately to confirm compliance, using standard prowords like Roger and Wilco.",
+
+  // Section 4 — Listening Drill (12 Operational Statements)
+  dr1:  "A go-around is an aborted landing procedure where the aircraft climbs out.",
+  dr2:  "Windshear involves a sudden change in wind speed or direction during flight.",
+  dr3:  "Airspace congestion occurs when there is high traffic density in a radar sector.",
+  dr4:  "Pilots must hold short and stop before entering an active runway.",
+  dr5:  "A missed approach is the standard discontinued landing procedure.",
+  dr6:  "Readback means repeating an ATC instruction to confirm it accurately.",
+  dr7:  "Wilco is an official proword meaning I have understood and will comply.",
+  dr8:  "Squelch is the radio control that reduces background static noise.",
+  dr9:  "V1 is the critical decision speed after which takeoff must continue.",
+  dr10: "V2 is the takeoff safety speed for climbing with one engine inoperative.",
+  dr11: "A tunnel departure is used in busy airports to keep departures separated from arrivals.",
+  dr12: "In Segment 4, the final takeoff phase, the aircraft clears all obstacles safely.",
+
+  // Section 5 — Present Perfect vs Present Perfect Progressive
+  pf1:  "We have lost engine two and need immediate priority landing.",
+  pf2:  "Visibility has dropped rapidly at the destination airfield.",
+  pf3:  "Approach, we have been holding over VOR Bravo for forty minutes.",
+  pf4:  "We have declared a fuel emergency due to low reserves.",
+  pf5:  "We have been burning extra fuel because of strong headwinds.",
+  pf6:  "Runway two seven has closed following a landing gear incident.",
+  pf7:  "Ground crews have been clearing debris from the runway since noon.",
+  pf8:  "The aircraft has been climbing at V2 for two minutes.",
+  pf9:  "The pilot has retracted the flaps in Segment 3.",
+  pf10: "The engines have been providing climb thrust since takeoff.",
+
+  // Section 6 — Technical Passages
+  passage1: "Takeoff is a critical phase of flight. Pilots must study the Net Takeoff Flight Path before departure. Once the aircraft has reached V1, the decision speed, the pilot rotates the aircraft at Vr. The landing gear has been retracted in Segment 1, and the aircraft has been climbing at V2. In busy airports, the crew has used a tunnel departure to avoid inbound traffic while respecting every climb restriction. For fuel efficiency, the crew has chosen a long-range climb, and the engines have been providing climb thrust since takeoff while the pilot monitors Mach number and Vb speed.",
+
+  passage2: "Radio communication is vital in aviation safety. Pilots and air traffic controllers have been using standardized phraseology for decades to prevent misunderstandings. When the pilot contacts the tower on the assigned frequency using the transceiver, the controller issues an official clearance. The pilot must read back the instruction to confirm accuracy. If the signal has been weak due to antenna interference or background static, the pilot adjusts the squelch control or switches to an alternate channel immediately.",
+
+  // Section 7 — Cockpit & Tower Dialogues
+  dialogue1: "Tower, Speedbird one two three, holding short of runway two seven, ready for departure. Speedbird one two three, Tower, hold at the holding point. Traffic on final has executed a missed approach due to windshear. Roger, holding at the holding point, Speedbird one two three. Also, Tower, we have been waiting at the holding point for ten minutes and are monitoring our fuel burn. Wilco, expect departure clearance in two minutes.",
+
+  dialogue2: "First Officer, verify our takeoff speeds and climb profile. Captain, V1 is one three five, Vr is one four two, and V2 is one five zero. I have studied the NTOFP, and we have a climb restriction to five thousand feet due to a tunnel departure. Understood. After rotation, call positive rate so I can command gear retraction, and we will transition to a long-range climb once clear of airspace congestion."
+};
+
+/* ============================================================
+   AUDIO PLAYER — PLAY (Natural Speed: 0.92) / PAUSE
+   ============================================================ */
+function playAudio(key){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(AUDIOS[key]);
+  u.lang = 'en-GB';
+  u.rate = 0.92;
+  u.pitch = 1;
+  const voices = window.speechSynthesis.getVoices();
+  let targetVoice = voices.find(v => v.lang === 'en-GB' && v.name.includes('Google')) ||
+                    voices.find(v => v.lang === 'en-GB') ||
+                    voices.find(v => v.lang && v.lang.startsWith('en'));
+  if(targetVoice) u.voice = targetVoice;
+  window.speechSynthesis.speak(u);
+}
+function pauseAudio(){
+  if(!('speechSynthesis' in window)) return;
+  if(window.speechSynthesis.speaking && !window.speechSynthesis.paused){
+    window.speechSynthesis.pause();
+  }
+}
+window.speechSynthesis && window.speechSynthesis.getVoices();
+
+/* ============================================================
+   SOUND FX
+   ============================================================ */
+let audioCtx;
+function getCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playDing(){
+  try{
+    const ctx = getCtx();
+    [880, 1320].forEach((freq, i)=>{
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.type='sine'; osc.frequency.value=freq;
+      const start=ctx.currentTime+i*0.09;
+      gain.gain.setValueAtTime(0.0001,start);
+      gain.gain.exponentialRampToValueAtTime(0.25,start+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001,start+0.25);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(start); osc.stop(start+0.28);
+    });
+  }catch(e){}
+}
+function playBuzz(){
+  try{
+    const ctx = getCtx();
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type='sawtooth'; osc.frequency.value=130;
+    const start=ctx.currentTime;
+    gain.gain.setValueAtTime(0.0001,start);
+    gain.gain.exponentialRampToValueAtTime(0.2,start+0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001,start+0.35);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(start); osc.stop(start+0.38);
+  }catch(e){}
+}
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+/* ============================================================
+   GLOBAL STATS
+   ============================================================ */
+const STATS = {
+  totalCorrect: 0,
+  totalWrong: 0,
+  sections: {
+    s1: { correct: 0, wrong: 0, max: 15 },
+    s2: { correct: 0, wrong: 0, max: 6 },
+    s3: { correct: 0, wrong: 0, max: 6 },
+    s4: { correct: 0, wrong: 0, max: 12 },
+    s5: { correct: 0, wrong: 0, max: 10 },
+    s6: { correct: 0, wrong: 0, max: 6 },
+    s7: { correct: 0, wrong: 0, max: 8 }
+  }
+};
+function addCorrect(sec){ STATS.totalCorrect++; STATS.sections[sec].correct++; }
+function addWrong(sec){ STATS.totalWrong++; STATS.sections[sec].wrong++; }
+
+/* ============================================================
+   SECTION 1 — OPERATIONAL VOCABULARY (Complete the Word)
+   ============================================================ */
+const COMPLETE_DATA = [
+  { id:'c1',  audio:'c1',  type:'pilot', sentence:'Approach, we are executing a go-around due to ______ on final.', answer:'windshear', alt:['windshear','wind shear'] },
+  { id:'c2',  audio:'c2',  type:'pilot', sentence:'We have experienced a bird ______ on the left engine during climb.', answer:'strike', alt:['strike'] },
+  { id:'c3',  audio:'c3',  type:'pilot', sentence:'Due to a severe fuel leak, we must ______ to the alternate airport.', answer:'divert', alt:['divert'] },
+  { id:'c4',  audio:'c4',  type:'pilot', sentence:'The crew has reported a flap ______ prior to approach.', answer:'malfunction', alt:['malfunction'] },
+  { id:'c5',  audio:'c5',  type:'pilot', sentence:'Severe ______ conditions have caused ice buildup on the wings and sensors.', answer:'icing', alt:['icing'] },
+  { id:'c6',  audio:'c6',  type:'pilot', sentence:'We have suffered a sudden ______ and are descending immediately.', answer:'depressurization', alt:['depressurization','depressurisation'] },
+  { id:'c7',  audio:'c7',  type:'pilot', sentence:'Tower, our nose landing ______ appears jammed after extension.', answer:'gear', alt:['gear'] },
+  { id:'c8',  audio:'c8',  type:'pilot', sentence:'We have lost engine two due to an unexpected ______.', answer:'flameout', alt:['flameout','flame out'] },
+  { id:'c9',  audio:'c9',  type:'atco',  sentence:'Approach, we have been holding in a holding ______ over VOR Bravo for forty minutes.', answer:'pattern', alt:['pattern'] },
+  { id:'c10', audio:'c10', type:'atco',  sentence:'Tower has stopped all departures because of a runway ______ on runway two seven.', answer:'incursion', alt:['incursion'] },
+  { id:'c11', audio:'c11', type:'atco',  sentence:'Maintain extra spacing behind the heavy aircraft to avoid wake ______.', answer:'turbulence', alt:['turbulence'] },
+  { id:'c12', audio:'c12', type:'atco',  sentence:'Radar is providing ______ via compass headings to establish minimum separation.', answer:'vectoring', alt:['vectoring'] },
+  { id:'c13', audio:'c13', type:'atco',  sentence:'Set ______ four two one five and hold short of runway zero niner.', answer:'squawk', alt:['squawk'] },
+  { id:'c14', audio:'c14', type:'ops',   sentence:'The pilot has just switched on the transceiver and adjusted the ______ control.', answer:'squelch', alt:['squelch'] },
+  { id:'c15', audio:'c15', type:'ops',   sentence:'The aircraft has reached V1 decision speed and ______ smoothly at Vr.', answer:'rotated', alt:['rotated'] }
+];
+
+const completeState = {};
+
+function buildComplete(){
+  const area = document.getElementById('completeArea');
+  area.innerHTML = COMPLETE_DATA.map((item, i) => {
+    completeState[item.id] = { attempts:0, solved:false, maxAttempts:3 };
+    const parts = item.sentence.split('______');
+    let badge = '<span class="type-badge pilot">Pilot Vocab</span>';
+    if(item.type === 'atco') badge = '<span class="type-badge atco">ATCO Vocab</span>';
+    if(item.type === 'ops')  badge = '<span class="type-badge ops">Radio &amp; Takeoff</span>';
+    return `
+      <div class="complete-item" id="${item.id}">
+        <div class="audio-btn-group" style="margin-bottom:8px;">
+          <button class="audio-btn play-btn small" onclick="playAudio('${item.audio}')">🔊</button>
+          <button class="audio-btn pause-btn small" onclick="pauseAudio()">⏸</button>
+          <span style="font-weight:700;color:var(--muted);font-size:13px;margin-left:8px;">
+            Sentence ${i+1} ${badge} 
+            <span class="attempt-tag" id="${item.id}-tag">0/3 attempts</span>
+          </span>
+        </div>
+        <div class="complete-sentence">
+          ${parts[0]}<input class="blank-input" id="${item.id}-input" type="text" placeholder="type missing word...">${parts[1] || ''}
+        </div>
+        <button class="complete-check-btn" id="${item.id}-check" onclick="checkComplete('${item.id}')">Check</button>
+        <div class="complete-feedback" id="${item.id}-fb"></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function checkComplete(id){
+  const state = completeState[id];
+  if(state.solved) return;
+  if(state.attempts >= state.maxAttempts) return;
+
+  const item = COMPLETE_DATA.find(x => x.id === id);
+  const input = document.getElementById(id+'-input');
+  const fb = document.getElementById(id+'-fb');
+  const tag = document.getElementById(id+'-tag');
+  const val = input.value.trim().toLowerCase();
+
+  if(val.length < 1){
+    fb.textContent = '⚠️ Please type a word.';
+    fb.className = 'complete-feedback no';
+    return;
+  }
+
+  const accepted = item.alt ? item.alt.map(a=>a.toLowerCase()) : [item.answer.toLowerCase()];
+  if(accepted.includes(val)){
+    state.solved = true;
+    input.disabled = true;
+    input.classList.add('correct');
+    addCorrect('s1');
+    fb.textContent = `✔ Correct! The word is "${item.answer}".`;
+    fb.className = 'complete-feedback ok';
+    playDing();
+    document.getElementById(id+'-check').disabled = true;
+    tag.textContent = '✔ Solved';
+    tag.style.color = 'var(--green)';
+    tag.style.background = '#e8f9ee';
+  } else {
+    state.attempts++;
+    addWrong('s1');
+    input.classList.add('wrong');
+    const rem = state.maxAttempts - state.attempts;
+    fb.textContent = `❌ Not correct. ${rem} attempts left.`;
+    fb.className = 'complete-feedback no';
+    playBuzz();
+    tag.textContent = state.attempts + '/3 attempts';
+    tag.style.color = 'var(--red)';
+    tag.style.background = '#fdecec';
+    setTimeout(()=>{ input.classList.remove('wrong'); }, 800);
+
+    if(state.attempts >= state.maxAttempts){
+      input.disabled = true;
+      document.getElementById(id+'-check').disabled = true;
+      tag.textContent = '❌ Max attempts (3/3)';
+      tag.className = 'attempt-tag maxed';
+      fb.textContent = `❌ Maximum attempts reached. The correct word is: "${item.answer}"`;
+    }
+  }
+}
+
+/* ============================================================
+   SECTIONS 2 & 3 — LISTENING MCQ
+   ============================================================ */
+const LISTEN_MEDIUM = [
+  { id:'lm_a', audio:'s2a', title:'Audio A — Pilot Emergency Mayday Transmission', sub:'ICAO Level 3 Cockpit Emergency Report',
+    questions:[
+      { id:'lm_a1', q:'What caused the flameout on engine two?',
+        options:[
+          {t:'A bird strike shortly after rotation', c:true},
+          {t:'Severe icing conditions during descent', c:false},
+          {t:'A jammed nose landing gear', c:false}
+        ]},
+      { id:'lm_a2', q:'What secondary problem has the crew detected?',
+        options:[
+          {t:'A minor fuel leak from the right wing tank', c:true},
+          {t:'Sudden cabin depressurization', c:false},
+          {t:'A flap malfunction on the left wing', c:false}
+        ]},
+      { id:'lm_a3', q:'What does the pilot request from Approach?',
+        options:[
+          {t:'Radar vectoring to divert directly to the nearest alternate airport', c:true},
+          {t:'Clearance to enter a holding pattern for forty minutes', c:false},
+          {t:'Permission to perform a high-speed climb to cruise altitude', c:false}
+        ]}
+    ]
+  },
+  { id:'lm_b', audio:'s2b', title:'Audio B — ATCO Emergency Vectoring & Runway Status', sub:'ICAO Level 3 Approach Control Response',
+    questions:[
+      { id:'lm_b1', q:'What squawk code does Approach assign to Speedbird 412?',
+        options:[
+          {t:'Squawk seven seven zero zero', c:true},
+          {t:'Squawk one two zero zero', c:false},
+          {t:'Squawk four two one five', c:false}
+        ]},
+      { id:'lm_b2', q:'Why has Runway 27 closed?',
+        options:[
+          {t:'Due to a runway incursion, and crews have been clearing debris', c:true},
+          {t:'Because of severe windshear and heavy snowfall', c:false},
+          {t:'Due to airspace congestion in the departure sector', c:false}
+        ]},
+      { id:'lm_b3', q:'Which runway is Approach vectoring the aircraft for?',
+        options:[
+          {t:'Runway zero niner', c:true},
+          {t:'Runway two seven', c:false},
+          {t:'Runway one eight', c:false}
+        ]}
+    ]
+  }
+];
+
+const LISTEN_LONG = [
+  { id:'ll', audio:'s3a', title:'Full Briefing A — Takeoff Speeds, NTOFP & Climb Restrictions', sub:'Flight 18 Operational Performance Briefing',
+    questions:[
+      { id:'ll_1', q:'What must pilots study in the flight manual before departure?',
+        options:[
+          {t:'The Net Takeoff Flight Path (NTOFP)', c:true},
+          {t:'Only the passenger manifest', c:false},
+          {t:'The squelch adjustment guide', c:false}
+        ]},
+      { id:'ll_2', q:'What happens once the aircraft reaches V1 during the ground roll?',
+        options:[
+          {t:'Takeoff is mandatory', c:true},
+          {t:'The pilot must abort the takeoff immediately', c:false},
+          {t:'The crew retracts the flaps in Segment 1', c:false}
+        ]},
+      { id:'ll_3', q:'What action occurs in Segment 1 and what speed is used if an engine fails?',
+        options:[
+          {t:'Landing gear retraction in Segment 1, and V2 safety speed if an engine fails', c:true},
+          {t:'Flap extension in Segment 1, and Vr speed for cruising', c:false},
+          {t:'Holding short in Segment 1, and Mach 0.78 on the runway', c:false}
+        ]}
+    ]
+  },
+  { id:'ll_b', audio:'s3b', title:'Full Briefing B — Climb Methods & Standardized Radio Procedures', sub:'Flight 18 Radiotelephony & Climb Efficiency Report',
+    questions:[
+      { id:'ll_4', q:'Which climb method is chosen for maximum fuel efficiency?',
+        options:[
+          {t:'A long-range climb', c:true},
+          {t:'A best rate of climb', c:false},
+          {t:'A tunnel departure', c:false}
+        ]},
+      { id:'ll_5', q:'Why must pilots read back every official ATC clearance?',
+        options:[
+          {t:'To confirm accuracy and compliance on frequency', c:true},
+          {t:'To test the volume of the cabin speakers', c:false},
+          {t:'To cancel the assigned transponder squawk code', c:false}
+        ]},
+      { id:'ll_6', q:'What do the standard prowords Roger and Wilco mean?',
+        options:[
+          {t:'Roger means message received; Wilco means understood and will comply', c:true},
+          {t:'Roger means abort landing; Wilco means declare emergency', c:false},
+          {t:'Roger means climb immediately; Wilco means hold short', c:false}
+        ]}
+    ]
+  }
+];
+
+const listenState = {};
+
+function buildListening(containerId, dataList, sectionKey){
+  const container = document.getElementById(containerId);
+  container.innerHTML = dataList.map(item => {
+    const questionsHTML = item.questions.map((q, qi) => {
+      listenState[q.id] = { attempts:0, solved:false, maxAttempts:3 };
+      const shuffled = shuffle([...q.options]);
+      return `
+        <div class="question-block" id="${q.id}">
+          <div class="q-text">${qi+1}. ${q.q} <span class="attempt-tag" id="${q.id}-tag">0/3 attempts</span></div>
+          <div class="opt-grid">
+            ${shuffled.map(o => `<button class="opt-btn" onclick="checkListenMCQ('${q.id}', this, ${o.c}, '${sectionKey}')">${o.t}</button>`).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+    return `
+      <div class="lab-card">
+        <div class="audio-player-box">
+          <div class="audio-btn-group">
+            <button class="audio-btn play-btn" onclick="playAudio('${item.audio}')">🔊</button>
+            <button class="audio-btn pause-btn" onclick="pauseAudio()">⏸</button>
+          </div>
+          <div class="audio-info">
+            <h4>${item.title}</h4>
+            <p>${item.sub}</p>
+          </div>
+        </div>
+        ${questionsHTML}
+      </div>
+    `;
+  }).join('');
+}
+
+function checkListenMCQ(qid, btn, isCorrect, sec){
+  const state = listenState[qid];
+  if(state.solved) return;
+  if(state.attempts >= state.maxAttempts) return;
+
+  const block = document.getElementById(qid);
+  const tag = document.getElementById(qid+'-tag');
+
+  if(isCorrect){
+    btn.classList.add('correct');
+    block.querySelectorAll('.opt-btn').forEach(b => { b.style.pointerEvents='none'; b.disabled=true; });
+    state.solved = true;
+    addCorrect(sec);
+    playDing();
+    tag.textContent = '✔ Correct! (' + (state.attempts+1) + '/3)';
+    tag.style.color = 'var(--green)';
+    tag.style.background = '#e8f9ee';
+  } else {
+    btn.classList.add('wrong');
+    state.attempts++;
+    addWrong(sec);
+    playBuzz();
+    const rem = state.maxAttempts - state.attempts;
+    tag.textContent = state.attempts + '/3 attempts — ' + rem + ' left';
+    tag.style.color = 'var(--red)';
+    tag.style.background = '#fdecec';
+    setTimeout(()=>{ btn.classList.remove('wrong'); }, 600);
+
+    if(state.attempts >= state.maxAttempts){
+      block.querySelectorAll('.opt-btn').forEach(b => { b.style.pointerEvents='none'; b.disabled=true; });
+      tag.textContent = '❌ Max attempts (3/3)';
+      tag.className = 'attempt-tag maxed';
+    }
+  }
+}
+
+/* ============================================================
+   SECTION 4 — LISTENING DRILL (12 Operational Definitions & Statements)
+   ============================================================ */
+const DRILL_DATA = [
+  { id:'dr1', audio:'dr1', options:[
+    {t:'A go-around is an aborted landing procedure where the aircraft climbs out.', c:true},
+    {t:'A go-around is a taxi maneuver between the terminal gate and holding point.', c:false},
+    {t:'A go-around is an emergency descent caused by cabin depressurization.', c:false}
+  ]},
+  { id:'dr2', audio:'dr2', options:[
+    {t:'Windshear involves a sudden change in wind speed or direction during flight.', c:true},
+    {t:'Windshear refers to ice buildup on pitot tubes and wing leading edges.', c:false},
+    {t:'Windshear is a four-digit code entered into the aircraft transponder.', c:false}
+  ]},
+  { id:'dr3', audio:'dr3', options:[
+    {t:'Airspace congestion occurs when there is high traffic density in a radar sector.', c:true},
+    {t:'Airspace congestion means the runway has closed due to foreign debris.', c:false},
+    {t:'Airspace congestion is the ratio of aircraft speed to the speed of sound.', c:false}
+  ]},
+  { id:'dr4', audio:'dr4', options:[
+    {t:'Pilots must hold short and stop before entering an active runway.', c:true},
+    {t:'Pilots must cross the active runway immediately without ATC clearance.', c:false},
+    {t:'Pilots must retract the landing gear while waiting at the holding point.', c:false}
+  ]},
+  { id:'dr5', audio:'dr5', options:[
+    {t:'A missed approach is the standard discontinued landing procedure.', c:true},
+    {t:'A missed approach is the final takeoff segment after clearing obstacles.', c:false},
+    {t:'A missed approach is a radio control that eliminates static interference.', c:false}
+  ]},
+  { id:'dr6', audio:'dr6', options:[
+    {t:'Readback means repeating an ATC instruction to confirm it accurately.', c:true},
+    {t:'Readback means turning off the transceiver during high workload.', c:false},
+    {t:'Readback means rerouting to an alternate airport due to a fuel leak.', c:false}
+  ]},
+  { id:'dr7', audio:'dr7', options:[
+    {t:'Wilco is an official proword meaning I have understood and will comply.', c:true},
+    {t:'Wilco means I have not received your transmission, say again.', c:false},
+    {t:'Wilco means abort takeoff immediately before reaching V1 speed.', c:false}
+  ]},
+  { id:'dr8', audio:'dr8', options:[
+    {t:'Squelch is the radio control that reduces background static noise.', c:true},
+    {t:'Squelch is the hinged wing surface extended during landing approach.', c:false},
+    {t:'Squelch is an orbital flight path flown while awaiting ATC clearance.', c:false}
+  ]},
+  { id:'dr9', audio:'dr9', options:[
+    {t:'V1 is the critical decision speed after which takeoff must continue.', c:true},
+    {t:'V1 is the maximum cruising Mach number at high altitude.', c:false},
+    {t:'V1 is the speed at which flaps are fully extended for touchdown.', c:false}
+  ]},
+  { id:'dr10', audio:'dr10', options:[
+    {t:'V2 is the takeoff safety speed for climbing with one engine inoperative.', c:true},
+    {t:'V2 is the taxi speed permitted between the apron and holding point.', c:false},
+    {t:'V2 is the speed at which the pilot applies wheel brakes after landing.', c:false}
+  ]},
+  { id:'dr11', audio:'dr11', options:[
+    {t:'A tunnel departure is used in busy airports to keep departures separated from arrivals.', c:true},
+    {t:'A tunnel departure is an underground taxiway connecting two terminals.', c:false},
+    {t:'A tunnel departure is a climb method used exclusively during flameouts.', c:false}
+  ]},
+  { id:'dr12', audio:'dr12', options:[
+    {t:'In Segment 4, the final takeoff phase, the aircraft clears all obstacles safely.', c:true},
+    {t:'In Segment 4, the aircraft begins its initial ground roll before Vr.', c:false},
+    {t:'In Segment 4, the crew holds short of the runway awaiting squawk assignment.', c:false}
+  ]}
+];
+
+const drillState = {};
+
+function buildDrill(){
+  const area = document.getElementById('drillArea');
+  area.innerHTML = DRILL_DATA.map((item, i) => {
+    drillState[item.id] = { attempts:0, solved:false, maxAttempts:3 };
+    const shuffled = shuffle([...item.options]);
+    return `
+      <div class="question-block" id="${item.id}">
+        <div class="q-text">${i+1}. Listen and select the matching statement: <span class="attempt-tag" id="${item.id}-tag">0/3 attempts</span></div>
+        <div class="audio-btn-group" style="margin-bottom:12px;">
+          <button class="audio-btn play-btn small" onclick="playAudio('${item.audio}')">🔊</button>
+          <button class="audio-btn pause-btn small" onclick="pauseAudio()">⏸</button>
+        </div>
+        <div class="opt-grid">
+          ${shuffled.map(o => `<button class="opt-btn" onclick="checkDrill('${item.id}', this, ${o.c})">${o.t}</button>`).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function checkDrill(qid, btn, isCorrect){
+  const state = drillState[qid];
+  if(state.solved) return;
+  if(state.attempts >= state.maxAttempts) return;
+
+  const block = document.getElementById(qid);
+  const tag = document.getElementById(qid+'-tag');
+
+  if(isCorrect){
+    btn.classList.add('correct');
+    block.querySelectorAll('.opt-btn').forEach(b => { b.style.pointerEvents='none'; b.disabled=true; });
+    state.solved = true;
+    addCorrect('s4');
+    playDing();
+    tag.textContent = '✔ Correct! (' + (state.attempts+1) + '/3)';
+    tag.style.color = 'var(--green)';
+    tag.style.background = '#e8f9ee';
+  } else {
+    btn.classList.add('wrong');
+    state.attempts++;
+    addWrong('s4');
+    playBuzz();
+    const rem = state.maxAttempts - state.attempts;
+    tag.textContent = state.attempts + '/3 attempts — ' + rem + ' left';
+    tag.style.color = 'var(--red)';
+    tag.style.background = '#fdecec';
+    setTimeout(()=>{ btn.classList.remove('wrong'); }, 600);
+
+    if(state.attempts >= state.maxAttempts){
+      block.querySelectorAll('.opt-btn').forEach(b => { b.style.pointerEvents='none'; b.disabled=true; });
+      tag.textContent = '❌ Max attempts (3/3)';
+      tag.className = 'attempt-tag maxed';
+    }
+  }
+}
+
+/* ============================================================
+   SECTION 5 — PRESENT PERFECT VS. PRESENT PERFECT PROGRESSIVE
+   ============================================================ */
+const PERFECT_DATA = [
+  { id:'pf1', audio:'pf1', options:[
+    {t:'We have lost engine two and need immediate priority landing.', c:true},
+    {t:'We have been losing engine two and need immediate priority landing.', c:false},
+    {t:'We had lost engine two and need immediate priority landing.', c:false}
+  ]},
+  { id:'pf2', audio:'pf2', options:[
+    {t:'Visibility has dropped rapidly at the destination airfield.', c:true},
+    {t:'Visibility have dropped rapidly at the destination airfield.', c:false},
+    {t:'Visibility has been drop rapidly at the destination airfield.', c:false}
+  ]},
+  { id:'pf3', audio:'pf3', options:[
+    {t:'Approach, we have been holding over VOR Bravo for forty minutes.', c:true},
+    {t:'Approach, we have hold over VOR Bravo for forty minutes.', c:false},
+    {t:'Approach, we has been holding over VOR Bravo for forty minutes.', c:false}
+  ]},
+  { id:'pf4', audio:'pf4', options:[
+    {t:'We have declared a fuel emergency due to low reserves.', c:true},
+    {t:'We have been declaring a fuel emergency due to low reserves.', c:false},
+    {t:'We has declared a fuel emergency due to low reserves.', c:false}
+  ]},
+  { id:'pf5', audio:'pf5', options:[
+    {t:'We have been burning extra fuel because of strong headwinds.', c:true},
+    {t:'We have burned extra fuel because of strong headwinds.', c:false},
+    {t:'We have been burn extra fuel because of strong headwinds.', c:false}
+  ]},
+  { id:'pf6', audio:'pf6', options:[
+    {t:'Runway two seven has closed following a landing gear incident.', c:true},
+    {t:'Runway two seven have closed following a landing gear incident.', c:false},
+    {t:'Runway two seven has been closing following a landing gear incident.', c:false}
+  ]},
+  { id:'pf7', audio:'pf7', options:[
+    {t:'Ground crews have been clearing debris from the runway since noon.', c:true},
+    {t:'Ground crews has been clearing debris from the runway since noon.', c:false},
+    {t:'Ground crews have cleared debris from the runway since noon.', c:false}
+  ]},
+  { id:'pf8', audio:'pf8', options:[
+    {t:'The aircraft has been climbing at V2 for two minutes.', c:true},
+    {t:'The aircraft have been climbing at V2 for two minutes.', c:false},
+    {t:'The aircraft has climbed at V2 for two minutes.', c:false}
+  ]},
+  { id:'pf9', audio:'pf9', options:[
+    {t:'The pilot has retracted the flaps in Segment 3.', c:true},
+    {t:'The pilot has been retracting the flaps in Segment 3.', c:false},
+    {t:'The pilot have retracted the flaps in Segment 3.', c:false}
+  ]},
+  { id:'pf10', audio:'pf10', options:[
+    {t:'The engines have been providing climb thrust since takeoff.', c:true},
+    {t:'The engines has been providing climb thrust since takeoff.', c:false},
+    {t:'The engines have provided climb thrust since takeoff.', c:false}
+  ]}
+];
+
+const perfectState = {};
+
+function buildPerfect(){
+  const area = document.getElementById('perfectArea');
+  area.innerHTML = PERFECT_DATA.map((item, i) => {
+    perfectState[item.id] = { attempts:0, solved:false, maxAttempts:3 };
+    const shuffled = shuffle([...item.options]);
+    return `
+      <div class="question-block" id="${item.id}">
+        <div class="q-text">${i+1}. Listen and select the exact transmission: <span class="attempt-tag" id="${item.id}-tag">0/3 attempts</span></div>
+        <div class="audio-btn-group" style="margin-bottom:12px;">
+          <button class="audio-btn play-btn small" onclick="playAudio('${item.audio}')">🔊</button>
+          <button class="audio-btn pause-btn small" onclick="pauseAudio()">⏸</button>
+        </div>
+        <div class="opt-grid">
+          ${shuffled.map(o => `<button class="opt-btn" onclick="checkPerfect('${item.id}', this, ${o.c})">${o.t}</button>`).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function checkPerfect(qid, btn, isCorrect){
+  const state = perfectState[qid];
+  if(state.solved) return;
+  if(state.attempts >= state.maxAttempts) return;
+
+  const block = document.getElementById(qid);
+  const tag = document.getElementById(qid+'-tag');
+
+  if(isCorrect){
+    btn.classList.add('correct');
+    block.querySelectorAll('.opt-btn').forEach(b => { b.style.pointerEvents='none'; b.disabled=true; });
+    state.solved = true;
+    addCorrect('s5');
+    playDing();
+    tag.textContent = '✔ Correct! (' + (state.attempts+1) + '/3)';
+    tag.style.color = 'var(--green)';
+    tag.style.background = '#e8f9ee';
+  } else {
+    btn.classList.add('wrong');
+    state.attempts++;
+    addWrong('s5');
+    playBuzz();
+    const rem = state.maxAttempts - state.attempts;
+    tag.textContent = state.attempts + '/3 attempts — ' + rem + ' left';
+    tag.style.color = 'var(--red)';
+    tag.style.background = '#fdecec';
+    setTimeout(()=>{ btn.classList.remove('wrong'); }, 600);
+
+    if(state.attempts >= state.maxAttempts){
+      block.querySelectorAll('.opt-btn').forEach(b => { b.style.pointerEvents='none'; b.disabled=true; });
+      tag.textContent = '❌ Max attempts (3/3)';
+      tag.className = 'attempt-tag maxed';
+    }
+  }
+}
+
+/* ============================================================
+   SECTION 6 — TECHNICAL PASSAGES (Open Answers)
+   ============================================================ */
+const STORY_DATA = {
+  passages: [
+    { audio: 'passage1', title: 'Passage 1: Takeoff Speeds & Climb Profile', sub: 'Listen to the Takeoff & Climb audio (Questions 1–3)' },
+    { audio: 'passage2', title: 'Passage 2: Standardized Radio Communications', sub: 'Listen to the Radio Communications audio (Questions 4–6)' }
+  ],
+  questions: [
+    { id:'st1',
+      q:'[Passage 1] What must pilots study before departure, and what happens at V1 and Vr?',
+      keywords:['ntofp','net takeoff flight path','v1','decision','vr','rotates','rotate'],
+      minKeywords:2,
+      sample:'Pilots must study the NTOFP before departure, reach V1 decision speed, and rotate at Vr.'
+    },
+    { id:'st2',
+      q:'[Passage 1] Why has the crew used a tunnel departure in busy airports?',
+      keywords:['avoid','traffic','inbound','tunnel','restriction'],
+      minKeywords:2,
+      sample:'The crew has used a tunnel departure to avoid inbound traffic while respecting climb restrictions.'
+    },
+    { id:'st3',
+      q:'[Passage 1] Which climb method has the crew chosen for fuel efficiency, and what parameters does the pilot monitor?',
+      keywords:['long-range','long range','mach','vb','speed'],
+      minKeywords:2,
+      sample:'The crew has chosen a long-range climb, and the pilot monitors Mach number and Vb speed.'
+    },
+    { id:'st4',
+      q:'[Passage 2] Why have pilots and air traffic controllers been using standardized phraseology for decades?',
+      keywords:['prevent','misunderstandings','safety','vital','communication'],
+      minKeywords:2,
+      sample:'They have been using standardized phraseology to prevent misunderstandings and ensure safety.'
+    },
+    { id:'st5',
+      q:'[Passage 2] What must the pilot do after the controller issues an official clearance?',
+      keywords:['read back','readback','confirm','accuracy','instruction'],
+      minKeywords:2,
+      sample:'The pilot must read back the clearance instruction to confirm accuracy.'
+    },
+    { id:'st6',
+      q:'[Passage 2] What does the pilot do if the radio signal has been weak or has background static?',
+      keywords:['squelch','channel','frequency','adjusts','switches'],
+      minKeywords:2,
+      sample:'The pilot adjusts the squelch control or switches to an alternate channel.'
+    }
+  ]
+};
+
+const storyState = {};
+
+function buildStory(){
+  const area = document.getElementById('storyArea');
+  const playersHTML = STORY_DATA.passages.map(p => `
+    <div class="audio-player-box">
+      <div class="audio-btn-group">
+        <button class="audio-btn play-btn" onclick="playAudio('${p.audio}')">🔊</button>
+        <button class="audio-btn pause-btn" onclick="pauseAudio()">⏸</button>
+      </div>
+      <div class="audio-info">
+        <h4>${p.title}</h4>
+        <p>${p.sub}</p>
+      </div>
+    </div>
+  `).join('');
+
+  const questionsHTML = STORY_DATA.questions.map((q, i) => {
+    storyState[q.id] = { attempts:0, solved:false, maxAttempts:3 };
+    return `
+      <div class="question-block" id="${q.id}">
+        <div class="q-text">${i+1}. ${q.q} <span class="attempt-tag" id="${q.id}-tag">0/3 attempts</span></div>
+        <textarea class="open-answer-input" id="${q.id}-input" placeholder="Write your answer in a complete sentence..."></textarea>
+        <button class="open-check-btn" id="${q.id}-check" onclick="checkStoryOpen('${q.id}')">Check Answer</button>
+        <div class="complete-feedback" id="${q.id}-fb"></div>
+      </div>
+    `;
+  }).join('');
+
+  area.innerHTML = `${playersHTML}${questionsHTML}`;
+}
+
+function checkStoryOpen(qid){
+  const state = storyState[qid];
+  if(state.solved) return;
+  if(state.attempts >= state.maxAttempts) return;
+
+  const q = STORY_DATA.questions.find(x => x.id === qid);
+  const input = document.getElementById(qid+'-input');
+  const fb = document.getElementById(qid+'-fb');
+  const tag = document.getElementById(qid+'-tag');
+  const val = input.value.trim().toLowerCase();
+
+  if(val.length < 8){
+    fb.textContent = '⚠️ Please write a complete answer (at least 8 characters).';
+    fb.className = 'complete-feedback no';
+    return;
+  }
+
+  let hits = 0;
+  q.keywords.forEach(kw => { if(val.includes(kw.toLowerCase())) hits++; });
+  const ok = hits >= q.minKeywords;
+
+  if(ok){
+    state.solved = true;
+    input.disabled = true;
+    input.classList.add('correct');
+    addCorrect('s6');
+    fb.textContent = `✔ Correct! Sample answer: "${q.sample}"`;
+    fb.className = 'complete-feedback ok';
+    playDing();
+    document.getElementById(qid+'-check').disabled = true;
+    tag.textContent = '✔ Correct!';
+    tag.style.color = 'var(--green)';
+    tag.style.background = '#e8f9ee';
+  } else {
+    state.attempts++;
+    addWrong('s6');
+    input.classList.add('wrong');
+    const rem = state.maxAttempts - state.attempts;
+    fb.textContent = `❌ Missing key operational concepts (${hits}/${q.minKeywords}). ${rem} attempts left.`;
+    fb.className = 'complete-feedback no';
+    playBuzz();
+    tag.textContent = state.attempts + '/3 attempts';
+    tag.style.color = 'var(--red)';
+    tag.style.background = '#fdecec';
+    setTimeout(()=>{ input.classList.remove('wrong'); }, 800);
+
+    if(state.attempts >= state.maxAttempts){
+      input.disabled = true;
+      document.getElementById(qid+'-check').disabled = true;
+      tag.textContent = '❌ Max attempts (3/3)';
+      tag.className = 'attempt-tag maxed';
+      fb.textContent = `❌ Max attempts reached. Sample: "${q.sample}"`;
+    }
+  }
+}
+
+/* ============================================================
+   SECTION 7 — COCKPIT & TOWER DIALOGUES (Roleplay)
+   ============================================================ */
+const ROLEPLAY_DATA = [
+  { id:'rp1', audio:'dialogue1', options:[
+    {t:'Speedbird 123 is holding short of Runway 27 and is instructed to hold at the holding point.', c:true},
+    {t:'Speedbird 123 has already taken off and is climbing through flight level two five zero.', c:false},
+    {t:'Tower clears Speedbird 123 for immediate intersection departure without delay.', c:false}
+  ]},
+  { id:'rp2', audio:'dialogue1', options:[
+    {t:'Preceding traffic on final executed a missed approach due to windshear.', c:true},
+    {t:'Preceding traffic suffered a bird strike and declared a fuel emergency.', c:false},
+    {t:'Ground crews are repairing a broken transceiver inside the control tower.', c:false}
+  ]},
+  { id:'rp3', audio:'dialogue1', options:[
+    {t:'Speedbird 123 has been waiting at the holding point for ten minutes and is monitoring fuel burn.', c:true},
+    {t:'Speedbird 123 has been holding over VOR Bravo for forty minutes awaiting weather improvement.', c:false},
+    {t:'Speedbird 123 requests to return to the gate due to cabin depressurization.', c:false}
+  ]},
+  { id:'rp4', audio:'dialogue1', options:[
+    {t:'The pilot confirms compliance using the standard prowords Roger and Wilco.', c:true},
+    {t:'The pilot refuses the instruction and enters active Runway 27 immediately.', c:false},
+    {t:'The pilot requests a squawk change to seven five zero zero.', c:false}
+  ]},
+  { id:'rp5', audio:'dialogue2', options:[
+    {t:'The crew verifies takeoff speeds: V1 is 135, Vr is 142, and V2 is 150.', c:true},
+    {t:'The crew cancels takeoff due to a flap malfunction discovered on the apron.', c:false},
+    {t:'The First Officer reports that V1 and Vr speeds have not been calculated yet.', c:false}
+  ]},
+  { id:'rp6', audio:'dialogue2', options:[
+    {t:'They have a climb restriction to 5,000 feet due to a tunnel departure.', c:true},
+    {t:'They are cleared for an unrestricted high-speed climb directly to cruise altitude.', c:false},
+    {t:'They must perform a go-around because of wake turbulence on departure.', c:false}
+  ]},
+  { id:'rp7', audio:'dialogue2', options:[
+    {t:'After rotation, the First Officer will call positive rate to command landing gear retraction.', c:true},
+    {t:'After rotation, the crew will extend the landing gear and reduce thrust to idle.', c:false},
+    {t:'After rotation, the pilot will hold short of the departure corridor.', c:false}
+  ]},
+  { id:'rp8', audio:'dialogue2', options:[
+    {t:'Once clear of airspace congestion, the aircraft will transition to a long-range climb.', c:true},
+    {t:'Once clear of airspace congestion, the aircraft will divert to the alternate airfield.', c:false},
+    {t:'Once clear of airspace congestion, the crew will switch off the avionics transceiver.', c:false}
+  ]}
+];
+
+const roleplayState = {};
+
+function buildRoleplay(){
+  const area = document.getElementById('roleplayArea');
+  area.innerHTML = ROLEPLAY_DATA.map((item, i) => {
+    roleplayState[item.id] = { attempts:0, solved:false, maxAttempts:3 };
+    const shuffled = shuffle([...item.options]);
+    let title = i < 4 ? "Dialogue 1 (Pilot & Tower — Holding Point, Missed Approach & Windshear)" : "Dialogue 2 (Captain & First Officer — Takeoff Speeds, NTOFP & Climb)";
+    return `
+      <div class="question-block" id="${item.id}">
+        <div class="q-text">${i+1}. [${title}] Listen and select the correct operational conclusion: <span class="attempt-tag" id="${item.id}-tag">0/3 attempts</span></div>
+        <div class="audio-btn-group" style="margin-bottom:12px;">
+          <button class="audio-btn play-btn small" onclick="playAudio('${item.audio}')">🔊 Dialogue Audio</button>
+          <button class="audio-btn pause-btn small" onclick="pauseAudio()">⏸</button>
+        </div>
+        <div class="opt-grid">
+          ${shuffled.map(o => `<button class="opt-btn" onclick="checkRoleplay('${item.id}', this, ${o.c})">${o.t}</button>`).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function checkRoleplay(qid, btn, isCorrect){
+  const state = roleplayState[qid];
+  if(state.solved) return;
+  if(state.attempts >= state.maxAttempts) return;
+
+  const block = document.getElementById(qid);
+  const tag = document.getElementById(qid+'-tag');
+
+  if(isCorrect){
+    btn.classList.add('correct');
+    block.querySelectorAll('.opt-btn').forEach(b => { b.style.pointerEvents='none'; b.disabled=true; });
+    state.solved = true;
+    addCorrect('s7');
+    playDing();
+    tag.textContent = '✔ Correct! (' + (state.attempts+1) + '/3)';
+    tag.style.color = 'var(--green)';
+    tag.style.background = '#e8f9ee';
+  } else {
+    btn.classList.add('wrong');
+    state.attempts++;
+    addWrong('s7');
+    playBuzz();
+    const rem = state.maxAttempts - state.attempts;
+    tag.textContent = state.attempts + '/3 attempts — ' + rem + ' left';
+    tag.style.color = 'var(--red)';
+    tag.style.background = '#fdecec';
+    setTimeout(()=>{ btn.classList.remove('wrong'); }, 600);
+
+    if(state.attempts >= state.maxAttempts){
+      block.querySelectorAll('.opt-btn').forEach(b => { b.style.pointerEvents='none'; b.disabled=true; });
+      tag.textContent = '❌ Max attempts (3/3)';
+      tag.className = 'attempt-tag maxed';
+    }
+  }
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+const phaseBtns = document.querySelectorAll('.phase-btn');
+const phases = document.querySelectorAll('.phase');
+
+function goToPhase(n){
+  phases.forEach(p => p.classList.remove('active'));
+  phaseBtns.forEach(b => b.classList.remove('active'));
+  document.getElementById('phase'+n).classList.add('active');
+  document.querySelector(`.phase-btn[data-phase="${n}"]`).classList.add('active');
+  document.getElementById('topProgress').style.width = (n/8*100)+'%';
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(n == 8) renderFinalReview();
+}
+phaseBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=> goToPhase(parseInt(btn.dataset.phase)));
+});
+
+/* ============================================================
+   FINAL REVIEW
+   ============================================================ */
+function renderFinalReview(){
+  const totalAttempts = STATS.totalCorrect + STATS.totalWrong;
+  const pct = totalAttempts > 0 ? Math.round((STATS.totalCorrect/totalAttempts)*100) : 0;
+  const passed = pct >= 80;
+
+  let medal = '🥉', label = 'Keep practicing ICAO Level 3 Aviation English!';
+  if(pct >= 90){ medal = '🥇'; label = 'Outstanding! Flight 18 Audio Lab Mastery!'; }
+  else if(pct >= 80){ medal = '🥈'; label = 'Great job! Operational Level Achieved!'; }
+  else { medal = '🥉'; label = 'Below 80%. You must repeat the Audio Lab.'; }
+
+  const rows = [
+    {label:'1. Operational Vocab (Complete)', val:STATS.sections.s1.correct, max:STATS.sections.s1.max},
+    {label:'2. Medium Listening', val:STATS.sections.s2.correct, max:STATS.sections.s2.max},
+    {label:'3. Long Briefing', val:STATS.sections.s3.correct, max:STATS.sections.s3.max},
+    {label:'4. Listening Drill', val:STATS.sections.s4.correct, max:STATS.sections.s4.max},
+    {label:'5. Perfect Tenses', val:STATS.sections.s5.correct, max:STATS.sections.s5.max},
+    {label:'6. Technical Passages', val:STATS.sections.s6.correct, max:STATS.sections.s6.max},
+    {label:'7. Cockpit & Tower Dialogues', val:STATS.sections.s7.correct, max:STATS.sections.s7.max},
+  ];
+
+  let resultHTML = '';
+  if(passed){
+    resultHTML = `<div class="result-box pass">✅ <strong>PASSED!</strong> You achieved ${pct}% — above the 80% requirement. Excellent work!</div>`;
+  } else {
+    resultHTML = `<div class="result-box fail">❌ <strong>NOT PASSED</strong> — You achieved ${pct}%. Minimum required is 80%. Repeat the Lab to reinforce.</div>`;
+  }
+
+  document.getElementById('finalArea').innerHTML = `
+    <div class="final-card">
+      <div class="medal">${medal}</div>
+      <h3>Flight 18 Audio Lab — Complete!</h3>
+      <div class="medal-label">${label}</div>
+      <div class="final-score-big">${pct}%</div>
+      <div class="final-score-sub">✅ ${STATS.totalCorrect} correct · ❌ ${STATS.totalWrong} errors · Total attempts: ${totalAttempts}</div>
+      ${resultHTML}
+      <div class="final-breakdown">
+        ${rows.map(r => `
+          <div class="fb-row">
+            <div class="fb-label">${r.label}</div>
+            <div class="fb-bar-outer"><div class="fb-bar-inner" style="width:${r.max > 0 ? (r.val/r.max*100) : 0}%;"></div></div>
+            <div class="fb-val">${r.val}/${r.max}</div>
+          </div>
+        `).join('')}
+      </div>
+      <button class="restart-btn" onclick="location.reload()">✈️ ${passed ? 'Repeat Audio Lab' : 'Repeat Audio Lab (Required)'}</button>
+    </div>
+  `;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+buildComplete();
+buildListening('listenMediumArea', LISTEN_MEDIUM, 's2');
+buildListening('listenLongArea', LISTEN_LONG, 's3');
+buildDrill();
+buildPerfect();
+buildStory();
+buildRoleplay();
+goToPhase(1);
+
+setTimeout(()=>{
+  if('speechSynthesis' in window) window.speechSynthesis.getVoices();
+}, 500);
+</script>
+</body>
+</html>
